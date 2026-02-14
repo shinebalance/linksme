@@ -1,0 +1,16 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="96" fill="#1F3A93"/>
+  <!-- half halo -->
+  <path d="M96,256 A160,160 0 0 1 416,256"
+        fill="none" stroke="#EAF2FF" stroke-width="56" stroke-linecap="round"/>
+  <!-- dots -->
+  <circle cx="196" cy="216" r="22" fill="#8A51FF"/>
+  <circle cx="316" cy="216" r="22" fill="#8A51FF"/>
+  <!-- soft glow rings (やや強め) -->
+  <circle cx="196" cy="216" r="34" fill="none" stroke="#8A51FF" stroke-opacity="0.50" stroke-width="10"/>
+  <circle cx="316" cy="216" r="34" fill="none" stroke="#8A51FF" stroke-opacity="0.50" stroke-width="10"/>
+  <!-- 'shi' stroke -->
+  <path d="M340,140 C220,140 220,260 280,288 C320,306 330,350 280,372"
+        transform="translate(0,12)"
+        fill="none" stroke="#EAF2FF" stroke-width="56" stroke-linecap="round"/>
+</svg>
