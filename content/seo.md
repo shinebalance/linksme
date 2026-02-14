@@ -1,4 +1,4 @@
-title: shineloops | links
-description: Vocaloid / original tracks. Links to X, YouTube, NicoNico, SoundCloud, Spotify and more.
+title: shineloops | boarding links
+description: Music and more by shineloops.
 ogImage: /ogp.svg
-ogUrl: https://linksme.pages.dev/
+ogUrl: https://shineloops.pages.dev/
