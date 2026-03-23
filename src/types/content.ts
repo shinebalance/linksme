@@ -13,6 +13,13 @@ export type LinkItem = {
   icon: string;
 };
 
+export type FeaturedContent = {
+  summary: string;
+  title: string;
+  embedUrl: string;
+  sourceUrl?: string;
+};
+
 export type SeoContent = {
   title: string;
   description: string;
