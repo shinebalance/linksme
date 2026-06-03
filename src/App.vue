@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import FeaturedEmbed from './components/FeaturedEmbed.vue';
 import LinkList from './components/LinkList.vue';
 import ProfileHeader from './components/ProfileHeader.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
 import Toast from './components/Toast.vue';
-import { loadLinksContent, loadProfileContent } from './content/loadContent';
+import { loadFeatureContent, loadLinksContent, loadProfileContent } from './content/loadContent';
 import type { ThemeMode } from './types/content';
 
 const THEME_KEY = 'linksme-theme';
 
 const profile = loadProfileContent();
 const links = loadLinksContent();
+const feature = loadFeatureContent();
 
 function getInitialTheme(): ThemeMode {
   const storedTheme = localStorage.getItem(THEME_KEY);
@@ -89,6 +91,8 @@ const currentThemeLabel = computed(() => (theme.value === 'dark' ? 'Dark' : 'Lig
     />
 
     <LinkList :links="links" :theme="theme" :resolve-icon-path="resolveIconPath" @copied="showToast" />
+
+    <FeaturedEmbed :feature="feature" />
 
     <Toast :visible="toastVisible" :message="toastMessage" />
   </main>
