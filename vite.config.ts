@@ -25,18 +25,41 @@ function validateProfileStrict(raw: string): void {
 }
 
 function validateLinksStrict(raw: string): void {
+  const headingPattern = /^##\s+.+?\s*\{([^}]*)\}$/;
   const linkPattern = /^-\s+\[[^\]]+\]\((https:\/\/[^)]+)\)\s+\{\s*id=([a-zA-Z0-9_-]+)\s+icon=([a-zA-Z0-9_-]+)\s*\}$/;
-  const lines = raw
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+  const lines = raw.split(/\r?\n/);
 
+  const groupIdSet = new Set<string>();
   const idSet = new Set<string>();
+  let hasGroup = false;
+
   for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index];
+    const line = lines[index].trim();
+    if (line.length === 0) {
+      continue;
+    }
+    const lineNumber = index + 1;
+
+    const headingMatch = line.match(headingPattern);
+    if (headingMatch) {
+      const groupId = headingMatch[1].match(/(?:^|\s)id=([a-zA-Z0-9_-]+)(?:\s|$)/)?.[1];
+      if (!groupId) {
+        throw new Error(`content/links.md: group heading is missing id at line ${lineNumber}`);
+      }
+      if (groupIdSet.has(groupId)) {
+        throw new Error(`content/links.md: duplicated group id detected: ${groupId}`);
+      }
+      groupIdSet.add(groupId);
+      hasGroup = true;
+      continue;
+    }
+
     const match = line.match(linkPattern);
     if (!match) {
-      throw new Error(`content/links.md: invalid format at line ${index + 1}: ${line}`);
+      throw new Error(`content/links.md: invalid format at line ${lineNumber}: ${line}`);
+    }
+    if (!hasGroup) {
+      throw new Error(`content/links.md: link before any "## Title {id=...}" heading at line ${lineNumber}`);
     }
 
     const id = match[2];
