@@ -18,7 +18,9 @@ function resolveAvatar(theme: ThemeMode, avatarPath?: string): string {
 
 <template>
   <header class="profile-header">
-    <img class="avatar" :src="resolveAvatar(theme, avatarPath)" :alt="`${name} avatar`" />
+    <div class="avatar-ring">
+      <img class="avatar" :src="resolveAvatar(theme, avatarPath)" :alt="`${name} avatar`" />
+    </div>
     <h1 class="name">{{ name }}</h1>
     <p v-if="tagline" class="tagline">{{ tagline }}</p>
   </header>

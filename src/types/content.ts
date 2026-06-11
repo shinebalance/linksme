@@ -13,6 +13,17 @@ export type LinkItem = {
   icon: string;
 };
 
+export type LinkGroupStyle = 'cards' | 'icons';
+
+export type LinkGroup = {
+  id: string;
+  title: string;
+  style: LinkGroupStyle;
+  showTitle: boolean;
+  featured: boolean;
+  items: LinkItem[];
+};
+
 export type FeaturedContent = {
   summary: string;
   title: string;

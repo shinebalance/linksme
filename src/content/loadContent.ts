@@ -2,7 +2,7 @@ import { parseFeature } from './parseFeature';
 import { parseLinks } from './parseLinks';
 import { parseProfile } from './parseProfile';
 import { parseSeo } from './parseSeo';
-import type { FeaturedContent, LinkItem, ProfileContent, SeoContent } from '../types/content';
+import type { FeaturedContent, LinkGroup, ProfileContent, SeoContent } from '../types/content';
 
 type RawModule = {
   default: string;
@@ -26,7 +26,7 @@ export function loadProfileContent(): ProfileContent {
   return parseProfile(getRawContent('profile.md'));
 }
 
-export function loadLinksContent(): LinkItem[] {
+export function loadLinksContent(): LinkGroup[] {
   return parseLinks(getRawContent('links.md'));
 }
 

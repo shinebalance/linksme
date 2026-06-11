@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import FeaturedEmbed from './components/FeaturedEmbed.vue';
 import LinkList from './components/LinkList.vue';
 import ProfileHeader from './components/ProfileHeader.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
@@ -77,6 +76,22 @@ const currentThemeLabel = computed(() => (theme.value === 'dark' ? 'Dark' : 'Lig
 </script>
 
 <template>
+  <svg
+    class="bg-loops"
+    aria-hidden="true"
+    viewBox="0 0 1200 800"
+    preserveAspectRatio="xMidYMid slice"
+  >
+    <defs>
+      <linearGradient id="loop-gradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#1F3A93" />
+        <stop offset="1" stop-color="#8A51FF" />
+      </linearGradient>
+    </defs>
+    <circle cx="1110" cy="30" r="300" fill="none" stroke="url(#loop-gradient)" stroke-width="64" />
+    <circle cx="60" cy="790" r="360" fill="none" stroke="url(#loop-gradient)" stroke-width="80" />
+  </svg>
+
   <main class="container">
     <div class="top-row">
       <span class="theme-label" aria-hidden="true">{{ currentThemeLabel }}</span>
@@ -90,9 +105,13 @@ const currentThemeLabel = computed(() => (theme.value === 'dark' ? 'Dark' : 'Lig
       :theme="theme"
     />
 
-    <LinkList :links="links" :theme="theme" :resolve-icon-path="resolveIconPath" @copied="showToast" />
-
-    <FeaturedEmbed :feature="feature" />
+    <LinkList
+      :groups="links"
+      :feature="feature"
+      :theme="theme"
+      :resolve-icon-path="resolveIconPath"
+      @copied="showToast"
+    />
 
     <Toast :visible="toastVisible" :message="toastMessage" />
   </main>
