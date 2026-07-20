@@ -35,6 +35,6 @@ export function loadSeoContent(): SeoContent {
 }
 
 
-export function loadFeatureContent(): FeaturedContent {
+export function loadFeatureContent(): FeaturedContent[] {
   return parseFeature(getRawContent('feature.md'));
 }
