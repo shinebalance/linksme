@@ -27,6 +27,10 @@ source: https://www.nicovideo.jp/watch/sm12345678
 
 niconico を埋め込む場合は `embed.nicovideo.jp/watch/smXXXXX` 形式の https URL を指定する。
 
+### アイコン（src/assets/icons/light, dark）
+
+各サービスのブランドロゴは [Simple Icons](https://simpleicons.org/)（CC0）由来のSVGパスを使用。各ロゴの商標は各社に帰属する。`hatenablog` と `sizume` は Simple Icons に該当エントリが無いため、文字ベースのフォールバックアイコンとした。`amazonmusic` も同様に該当エントリが無いため、ブランドカラー（#25D1DA）のタイルに文字とスマイルを描いた独自アイコンとしている。
+
 ### public/ogp.png（OGP画像）
 
 OGP/Twitter Card 用の画像は `assets/ogp-source.svg`（1200×630）を元に生成した PNG。SVG を編集したら、Chromium で 1200×630 のスクリーンショットを撮って `public/ogp.png` を再生成する（`npx playwright install` 不要、既存の Chromium をスクリプトから起動すればよい）。
