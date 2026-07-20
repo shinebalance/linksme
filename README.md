@@ -29,7 +29,7 @@ niconico を埋め込む場合は `embed.nicovideo.jp/watch/smXXXXX` 形式の h
 
 ### アイコン（src/assets/icons/light, dark）
 
-各サービスのブランドロゴは [Simple Icons](https://simpleicons.org/)（CC0）由来のSVGパスを使用。各ロゴの商標は各社に帰属する。`hatenablog` と `sizume`、`amazonmusic` は Simple Icons に該当エントリが無いため、文字ベースのフォールバックアイコンとした。
+各サービスのブランドロゴは [Simple Icons](https://simpleicons.org/)（CC0）由来のSVGパスを使用。各ロゴの商標は各社に帰属する。`hatenablog` と `sizume` は Simple Icons に該当エントリが無いため、文字ベースのフォールバックアイコンとした。`amazonmusic` も同様に該当エントリが無いため、ブランドカラー（#25D1DA）のタイルに文字とスマイルを描いた独自アイコンとしている。
 
 ### public/ogp.png（OGP画像）
 
