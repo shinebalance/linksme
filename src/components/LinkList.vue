@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import FeaturedEmbed from './FeaturedEmbed.vue';
 import LinkItemRow from './LinkItem.vue';
-import type { FeaturedContent, LinkGroup, ThemeMode } from '../types/content';
+import { trackLinkClick } from '../lib/analytics';
+import type { FeaturedContent, LinkGroup, LinkItem, ThemeMode } from '../types/content';
 
 defineProps<{
   groups: LinkGroup[];
@@ -13,6 +14,16 @@ defineProps<{
 const emit = defineEmits<{
   copied: [message: string];
 }>();
+
+function trackIconClick(groupId: string, link: LinkItem): void {
+  trackLinkClick({
+    groupId,
+    linkId: link.id,
+    linkLabel: link.label,
+    linkUrl: link.url,
+    action: 'click'
+  });
+}
 </script>
 
 <template>
@@ -38,6 +49,7 @@ const emit = defineEmits<{
             rel="noopener noreferrer"
             :aria-label="link.label"
             :title="link.label"
+            @click="trackIconClick(group.id, link)"
           >
             <img class="link-icon" :src="resolveIconPath(link.icon, theme)" alt="" />
           </a>
@@ -49,6 +61,7 @@ const emit = defineEmits<{
           v-for="link in group.items"
           :key="link.id"
           :item="link"
+          :group-id="group.id"
           :theme="theme"
           :icon-path="resolveIconPath(link.icon, theme)"
           @copied="emit('copied', $event)"

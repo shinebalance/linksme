@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import type { FeaturedContent } from '../types/content';
+import { trackLinkClick } from '../lib/analytics';
 
-defineProps<{
+const props = defineProps<{
   feature: FeaturedContent;
 }>();
+
+function trackSourceClick(): void {
+  if (!props.feature.sourceUrl) return;
+  trackLinkClick({
+    groupId: 'feature',
+    linkId: 'feature-source',
+    linkLabel: props.feature.title,
+    linkUrl: props.feature.sourceUrl,
+    action: 'click'
+  });
+}
 </script>
 
 <template>
@@ -28,6 +40,7 @@ defineProps<{
         :href="feature.sourceUrl"
         target="_blank"
         rel="noopener noreferrer"
+        @click="trackSourceClick"
       >
         ↗
       </a>
