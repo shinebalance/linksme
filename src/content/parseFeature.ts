@@ -20,8 +20,8 @@ function ensureHttpsUrl(value: string, fieldName: string): string {
   }
 }
 
-export function parseFeature(raw: string): FeaturedContent {
-  const lines = raw
+function parseFeatureBlock(rawBlock: string): FeaturedContent {
+  const lines = rawBlock
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
@@ -52,4 +52,33 @@ export function parseFeature(raw: string): FeaturedContent {
     embedUrl: ensureHttpsUrl(embedUrl, 'embed'),
     sourceUrl: sourceUrl ? ensureHttpsUrl(sourceUrl, 'source') : undefined
   };
+}
+
+function splitBlocks(raw: string): string[] {
+  const lines = raw.split(/\r?\n/);
+  const blocks: string[] = [];
+  let current: string[] = [];
+
+  for (const line of lines) {
+    if (line.trim() === '---') {
+      blocks.push(current.join('\n'));
+      current = [];
+      continue;
+    }
+    current.push(line);
+  }
+  blocks.push(current.join('\n'));
+
+  return blocks.map((block) => block.trim()).filter((block) => block.length > 0);
+}
+
+export function parseFeature(raw: string): FeaturedContent[] {
+  const blocks = splitBlocks(raw);
+  const entries = blocks.map((block) => parseFeatureBlock(block));
+
+  if (entries.length === 0) {
+    throw new Error('content/feature.md: at least one entry is required');
+  }
+
+  return entries;
 }

@@ -5,7 +5,7 @@ import type { FeaturedContent, LinkGroup, ThemeMode } from '../types/content';
 
 defineProps<{
   groups: LinkGroup[];
-  feature: FeaturedContent;
+  feature: FeaturedContent[];
   theme: ThemeMode;
   resolveIconPath: (iconName: string, theme: ThemeMode) => string;
 }>();
@@ -25,7 +25,9 @@ const emit = defineEmits<{
     >
       <h2 v-if="group.showTitle" class="group-title">{{ group.title }}</h2>
 
-      <FeaturedEmbed v-if="group.featured" :feature="feature" />
+      <template v-if="group.featured">
+        <FeaturedEmbed v-for="(item, index) in feature" :key="index" :feature="item" />
+      </template>
 
       <ul v-if="group.style === 'icons'" class="icon-row" :class="{ 'icon-row--center': !group.showTitle }">
         <li v-for="link in group.items" :key="link.id">
