@@ -5,6 +5,7 @@
 - [YouTube](https://www.youtube.com/@shineloops) {id=youtube icon=youtube}
 - [ニコニコ動画](https://www.nicovideo.jp/user/327564) {id=niconico icon=niconico}
 - [SoundCloud](https://soundcloud.com/shineloops) {id=soundcloud icon=soundcloud}
+- [bilibili](https://space.bilibili.com/3745029038279335) {id=bilibili icon=bilibili}
 
 ## Streaming {id=streaming style=icons}
 - [Spotify](https://open.spotify.com/intl-ja/artist/3vCJ4ZTxF8jmbf9tGwdX4U?si=M-hKXy38QCe2IKHtQYTVrQ) {id=spotify icon=spotify}
