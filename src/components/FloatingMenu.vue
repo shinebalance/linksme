@@ -1,47 +1,17 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, watch } from 'vue';
-import { arrow, autoUpdate, flip, offset, shift, useFloating } from '@floating-ui/vue';
-import type { Placement } from '@floating-ui/vue';
+import { onUnmounted, ref, watch } from 'vue';
 
-const props = withDefaults(
-  defineProps<{
-    open: boolean;
-    anchor: HTMLElement | null;
-    label: string;
-    placement?: Placement;
-  }>(),
-  {
-    placement: 'top'
-  }
-);
+const props = defineProps<{
+  open: boolean;
+  anchor: HTMLElement | null;
+  label: string;
+}>();
 
 const emit = defineEmits<{
   'update:open': [value: boolean];
 }>();
 
-const referenceEl = computed(() => props.anchor);
-const floatingEl = ref<HTMLElement | null>(null);
-const arrowEl = ref<HTMLElement | null>(null);
-
-const { floatingStyles, placement, middlewareData } = useFloating(referenceEl, floatingEl, {
-  placement: props.placement,
-  strategy: 'fixed',
-  whileElementsMounted: autoUpdate,
-  middleware: [offset(12), flip(), shift({ padding: 8 }), arrow({ element: arrowEl, padding: 10 })]
-});
-
-const arrowStyle = computed(() => {
-  const data = middlewareData.value.arrow;
-  const staticSide = (
-    { top: 'bottom', right: 'left', bottom: 'top', left: 'right' } as const
-  )[placement.value.split('-')[0] as 'top' | 'right' | 'bottom' | 'left'];
-
-  return {
-    left: data?.x != null ? `${data.x}px` : '',
-    top: data?.y != null ? `${data.y}px` : '',
-    [staticSide]: '-4px'
-  };
-});
+const menuEl = ref<HTMLElement | null>(null);
 
 function close(): void {
   emit('update:open', false);
@@ -55,7 +25,7 @@ function handleKeydown(event: KeyboardEvent): void {
 
 function handlePointerDown(event: PointerEvent): void {
   const target = event.target as Node;
-  if (floatingEl.value?.contains(target) || props.anchor?.contains(target)) {
+  if (menuEl.value?.contains(target) || props.anchor?.contains(target)) {
     return;
   }
   close();
@@ -78,8 +48,13 @@ watch(
       addOutsideListeners();
     } else {
       removeOutsideListeners();
-      if (wasOpen && props.anchor && !props.anchor.closest('[inert]')) {
-        props.anchor.focus();
+      if (wasOpen) {
+        const anchorEl = props.anchor;
+        setTimeout(() => {
+          if (anchorEl && !anchorEl.closest('[inert]')) {
+            anchorEl.focus();
+          }
+        }, 0);
       }
     }
   }
@@ -89,17 +64,8 @@ onUnmounted(removeOutsideListeners);
 </script>
 
 <template>
-  <Teleport to="body">
-    <div
-      v-if="open"
-      ref="floatingEl"
-      class="floating-menu"
-      role="menu"
-      :aria-label="label"
-      :style="floatingStyles"
-    >
-      <div ref="arrowEl" class="floating-menu-arrow" :style="arrowStyle" />
-      <slot :close="close" />
-    </div>
-  </Teleport>
+  <div v-if="open" ref="menuEl" class="floating-menu" role="menu" :aria-label="label">
+    <div class="floating-menu-arrow" />
+    <slot :close="close" />
+  </div>
 </template>
