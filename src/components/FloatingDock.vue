@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import FloatingMenu from './FloatingMenu.vue';
 import { trackDockAction } from '../lib/analytics';
 import type { ThemeMode, ThemePreference } from '../types/content';
@@ -37,10 +37,18 @@ function handleScroll(): void {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
+});
+
+watch(visible, (isVisible) => {
+  if (!isVisible) {
+    themeOpen.value = false;
+    shareOpen.value = false;
+  }
 });
 
 function toggleThemeMenu(): void {
@@ -50,7 +58,11 @@ function toggleThemeMenu(): void {
 
 function toggleShareMenu(): void {
   themeOpen.value = false;
-  shareOpen.value = !shareOpen.value;
+  const opening = !shareOpen.value;
+  shareOpen.value = opening;
+  if (opening) {
+    trackDockAction('share_open');
+  }
 }
 
 function scrollToTop(): void {
@@ -59,7 +71,6 @@ function scrollToTop(): void {
 }
 
 async function handleShareClick(): Promise<void> {
-  trackDockAction('share_open');
   if (navigator.share) {
     try {
       await navigator.share({ title: props.shareTitle, url: props.shareUrl });

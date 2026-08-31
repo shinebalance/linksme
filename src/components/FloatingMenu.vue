@@ -78,8 +78,8 @@ watch(
       addOutsideListeners();
     } else {
       removeOutsideListeners();
-      if (wasOpen) {
-        props.anchor?.focus();
+      if (wasOpen && props.anchor && !props.anchor.closest('[inert]')) {
+        props.anchor.focus();
       }
     }
   }
