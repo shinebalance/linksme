@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import FloatingDock from './components/FloatingDock.vue';
 import LinkList from './components/LinkList.vue';
 import ProfileHeader from './components/ProfileHeader.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
@@ -114,5 +115,7 @@ const currentThemeLabel = computed(() => (theme.value === 'dark' ? 'Dark' : 'Lig
     />
 
     <Toast :visible="toastVisible" :message="toastMessage" />
+
+    <FloatingDock :theme="theme" @toggle-theme="toggleTheme" />
   </main>
 </template>
