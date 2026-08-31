@@ -12,8 +12,10 @@ const emit = defineEmits<{
 }>();
 
 const menuEl = ref<HTMLElement | null>(null);
+let restoreFocusOnClose = true;
 
-function close(): void {
+function close(restoreFocus = true): void {
+  restoreFocusOnClose = restoreFocus;
   emit('update:open', false);
 }
 
@@ -28,7 +30,7 @@ function handlePointerDown(event: PointerEvent): void {
   if (menuEl.value?.contains(target) || props.anchor?.contains(target)) {
     return;
   }
-  close();
+  close(false);
 }
 
 function addOutsideListeners(): void {
@@ -45,16 +47,12 @@ watch(
   () => props.open,
   (isOpen, wasOpen) => {
     if (isOpen) {
+      restoreFocusOnClose = true;
       addOutsideListeners();
     } else {
       removeOutsideListeners();
-      if (wasOpen) {
-        const anchorEl = props.anchor;
-        setTimeout(() => {
-          if (anchorEl && !anchorEl.closest('[inert]')) {
-            anchorEl.focus();
-          }
-        }, 0);
+      if (wasOpen && restoreFocusOnClose && props.anchor && !props.anchor.closest('[inert]')) {
+        props.anchor.focus();
       }
     }
   }
