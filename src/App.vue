@@ -5,7 +5,7 @@ import LinkList from './components/LinkList.vue';
 import ProfileHeader from './components/ProfileHeader.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
 import Toast from './components/Toast.vue';
-import { loadFeatureContent, loadLinksContent, loadProfileContent, loadSeoContent } from './content/loadContent';
+import { loadFeatureContent, loadLinksContent, loadProfileContent } from './content/loadContent';
 import type { ThemeMode, ThemePreference } from './types/content';
 
 const THEME_KEY = 'linksme-theme';
@@ -13,7 +13,6 @@ const THEME_KEY = 'linksme-theme';
 const profile = loadProfileContent();
 const links = loadLinksContent();
 const feature = loadFeatureContent();
-const seo = loadSeoContent();
 
 const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -147,13 +146,6 @@ const currentThemeLabel = computed(() => (theme.value === 'dark' ? 'Dark' : 'Lig
 
     <Toast :visible="toastVisible" :message="toastMessage" />
 
-    <FloatingDock
-      :theme="theme"
-      :theme-preference="themePreference"
-      :share-title="seo.title"
-      :share-url="seo.ogUrl"
-      @set-theme-preference="setThemePreference"
-      @copied="showToast"
-    />
+    <FloatingDock :theme="theme" :theme-preference="themePreference" @set-theme-preference="setThemePreference" />
   </main>
 </template>
