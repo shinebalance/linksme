@@ -1,7 +1,5 @@
 export type ThemeMode = 'light' | 'dark';
 
-export type ThemePreference = 'light' | 'dark' | 'system';
-
 export type ProfileContent = {
   name: string;
   tagline?: string;
