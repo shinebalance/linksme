@@ -1,37 +1,69 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
+import FloatingDock from './components/FloatingDock.vue';
 import LinkList from './components/LinkList.vue';
 import ProfileHeader from './components/ProfileHeader.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
 import Toast from './components/Toast.vue';
-import { loadFeatureContent, loadLinksContent, loadProfileContent } from './content/loadContent';
-import type { ThemeMode } from './types/content';
+import { loadFeatureContent, loadLinksContent, loadProfileContent, loadSeoContent } from './content/loadContent';
+import type { ThemeMode, ThemePreference } from './types/content';
 
 const THEME_KEY = 'linksme-theme';
 
 const profile = loadProfileContent();
 const links = loadLinksContent();
 const feature = loadFeatureContent();
+const seo = loadSeoContent();
 
-function getInitialTheme(): ThemeMode {
+const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+function getInitialPreference(): ThemePreference {
   const storedTheme = localStorage.getItem(THEME_KEY);
-  if (storedTheme === 'light' || storedTheme === 'dark') {
+  if (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system') {
     return storedTheme;
   }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'system';
 }
 
-const theme = ref<ThemeMode>(getInitialTheme());
+function resolveTheme(preference: ThemePreference): ThemeMode {
+  if (preference === 'system') {
+    return systemThemeQuery.matches ? 'dark' : 'light';
+  }
+  return preference;
+}
+
+const themePreference = ref<ThemePreference>(getInitialPreference());
+const theme = ref<ThemeMode>(resolveTheme(themePreference.value));
 const toastVisible = ref(false);
 const toastMessage = ref('');
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 document.documentElement.setAttribute('data-theme', theme.value);
 
-function toggleTheme(): void {
-  theme.value = theme.value === 'dark' ? 'light' : 'dark';
-  localStorage.setItem(THEME_KEY, theme.value);
+function applyTheme(): void {
+  theme.value = resolveTheme(themePreference.value);
   document.documentElement.setAttribute('data-theme', theme.value);
+}
+
+function setThemePreference(preference: ThemePreference): void {
+  themePreference.value = preference;
+  localStorage.setItem(THEME_KEY, preference);
+  applyTheme();
+}
+
+function handleSystemThemeChange(): void {
+  if (themePreference.value === 'system') {
+    applyTheme();
+  }
+}
+
+systemThemeQuery.addEventListener('change', handleSystemThemeChange);
+onUnmounted(() => {
+  systemThemeQuery.removeEventListener('change', handleSystemThemeChange);
+});
+
+function toggleTheme(): void {
+  setThemePreference(theme.value === 'dark' ? 'light' : 'dark');
 }
 
 const lightIcons = import.meta.glob('./assets/icons/light/*.svg', {
@@ -114,5 +146,14 @@ const currentThemeLabel = computed(() => (theme.value === 'dark' ? 'Dark' : 'Lig
     />
 
     <Toast :visible="toastVisible" :message="toastMessage" />
+
+    <FloatingDock
+      :theme="theme"
+      :theme-preference="themePreference"
+      :share-title="seo.title"
+      :share-url="seo.ogUrl"
+      @set-theme-preference="setThemePreference"
+      @copied="showToast"
+    />
   </main>
 </template>

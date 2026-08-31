@@ -19,3 +19,9 @@ export function trackLinkClick(params: {
     action: params.action
   });
 }
+
+export function trackDockAction(action: string): void {
+  window.gtag?.('event', 'dock_action', {
+    action
+  });
+}
